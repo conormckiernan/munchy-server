@@ -24,7 +24,7 @@ var connection: mysql.Connection;
 
 app.get("/", (req, res) => res.send("Hello, world!"));
 app.get("/recipes", (req, res) => {
-  connection.query('SELECT * FROM Recipes', (err, rows: string[], fields) => {
+  connection.query('SELECT * FROM Recipes', (err, rows: string[]) => {
     if (err) throw err;
 
     console.log(rows);
@@ -34,7 +34,16 @@ app.get("/recipes", (req, res) => {
   });
 });
 
-app.get("/recipes/:recipeId", (req, res) => res.send(req.params.recipeId));
+app.get("/recipes/:recipeId", (req, res) => {
+  connection.query(`SELECT * FROM Recipes WHERE id = ${req.params.recipeId}`, (err, rows: string[]) => {
+    if (err) throw err;
+
+    console.log(rows);
+    let resp: RecipeListResponse = {recipes: []};
+    rows.forEach((element: string) => { resp.recipes.push(element) });
+    res.send(JSON.stringify(resp, null, 2));
+  })
+});
 
 console.log("Server is starting");
 waitOn({ resources: ["tcp:mysql:3306"] })
