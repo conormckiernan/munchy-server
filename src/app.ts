@@ -2,6 +2,11 @@ import express from "express";
 import waitOn from "wait-on";
 import mysql from "mysql2";
 
+
+interface RecipeListResponse {
+  recipes: string[];
+}
+
 const app = express();
 const port: number = 3000;
 
@@ -16,12 +21,26 @@ const {
   MYSQL_DB_FILE: DB_FILE,
 } = process.env;
 
-var connection;
+var connection : mysql.
+
+app.get("/", (req, res) => res.send("Hello, world!"));
+app.get("/recipes", (req, res) => {
+  connection.query('SELECT * FROM RECIPE', (err, rows, fields) => {
+    if (err) throw err;
+
+    console.log(rows);
+    var resp = { recipes: [] };
+    rows.forEach((element: string) => { resp.recipes.push(element) });
+    res.send(JSON.stringify(resp, null, 2));
+  });
+});
+
+app.get("/recipes/:recipeId", (req, res) => res.send(req.params.recipeId));
 
 console.log("Server is starting");
 waitOn({ resources: ["tcp:mysql:3306"] })
   .then(() => {
-   
+
     connection = mysql.createConnection({
       host: HOST,
       user: USER,
@@ -31,9 +50,6 @@ waitOn({ resources: ["tcp:mysql:3306"] })
 
     connection.connect;
 
-    app.get("/", (req, res) => res.send("Hello, world!"));
-    app.get("/recipes", (req, res) => res.send("List of all recipes :)"));
-    app.get("/recipes/:recipeId", (req, res) => res.send(req.params.recipeId));
     app.listen(port, () => {
       return console.log(`Server is listening on port ${port}`);
     });
