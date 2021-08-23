@@ -2,13 +2,9 @@ import express from "express";
 import waitOn from "wait-on";
 import mysql from "mysql2";
 
-
 interface RecipeListResponse {
   recipes: string[];
 }
-
-const app = express();
-const port: number = 3000;
 
 const {
   MYSQL_HOST: HOST,
@@ -21,15 +17,18 @@ const {
   MYSQL_DB_FILE: DB_FILE,
 } = process.env;
 
-var connection : mysql.
+const app = express();
+const port: number = 3000;
+
+var connection: mysql.Connection;
 
 app.get("/", (req, res) => res.send("Hello, world!"));
 app.get("/recipes", (req, res) => {
-  connection.query('SELECT * FROM RECIPE', (err, rows, fields) => {
+  connection.query('SELECT * FROM Recipes', (err, rows: string[], fields) => {
     if (err) throw err;
 
     console.log(rows);
-    var resp = { recipes: [] };
+    let resp: RecipeListResponse = {recipes: []};
     rows.forEach((element: string) => { resp.recipes.push(element) });
     res.send(JSON.stringify(resp, null, 2));
   });
@@ -48,7 +47,7 @@ waitOn({ resources: ["tcp:mysql:3306"] })
       database: DB
     })
 
-    connection.connect;
+    connection.connect();
 
     app.listen(port, () => {
       return console.log(`Server is listening on port ${port}`);
