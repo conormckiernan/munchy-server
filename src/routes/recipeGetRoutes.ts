@@ -4,6 +4,7 @@ import IRecipeResponse from "../models/IRecipeReponse";
 
 const recipeGetRoutes = Express.Router();
 
+// Get a list of all recipes
 recipeGetRoutes.get("/recipes", (req, res) => {
   dbConnection.query('SELECT * FROM Recipes', (err, rows: string[]) => {
     if (err) throw err;
@@ -15,6 +16,8 @@ recipeGetRoutes.get("/recipes", (req, res) => {
   });
 });
 
+// Get a specific recipe
+// TODO: Get more details for a recipe (steps, pictures, etc.)
 recipeGetRoutes.get("/recipes/:recipeId", (req, res) => {
   dbConnection.query(`SELECT * FROM Recipes WHERE id = ${req.params.recipeId}`, (err, rows: string[]) => {
     if (err) throw err;

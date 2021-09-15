@@ -4,15 +4,15 @@ import waitOn from "wait-on";
 import recipeGetRoutes from './routes/recipeGetRoutes';
 import recipePostRoutes from "./routes/recipePostRoutes";
 
-const app = express();
+const server = express();
 const port: number = 3000;
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+server.use(express.urlencoded({extended: true}));
+server.use(express.json());
 
 // Use routes we specify in the other files
-app.use("/", recipeGetRoutes);
-app.use("/", recipePostRoutes);
+server.use("/", recipeGetRoutes);
+server.use("/", recipePostRoutes);
 
 console.log("Server is starting");
 
@@ -20,7 +20,7 @@ console.log("Server is starting");
 waitOn({ resources: ["tcp:mysql:3306"] })
   .then(() => {
     // Start listening on local port specified above
-    app.listen(port, () => {
+    server.listen(port, () => {
       return console.log(`Server is listening on port ${port}`);
     });
   })
