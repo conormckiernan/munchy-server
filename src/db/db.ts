@@ -1,21 +1,25 @@
 import mysql from 'mysql2';
 
-const {
-  MYSQL_HOST: HOST,
-  MYSQL_USER: USER,
-  MYSQL_PASSWORD: PASSWORD,
-  MYSQL_DB: DB,
-} = process.env;
+function getDBConnection(): mysql.Connection {
+  const {
+    MYSQL_HOST: HOST,
+    MYSQL_USER: USER,
+    MYSQL_PASSWORD: PASSWORD,
+    MYSQL_DB: DB,
+  } = process.env;
+  
+  var dbConnection: mysql.Connection;
+  
+  dbConnection = mysql.createConnection({
+    host: HOST,
+    user: USER,
+    password: PASSWORD,
+    database: DB
+  })
+  
+  dbConnection.connect();
 
-var dbConnection: mysql.Connection;
+  return dbConnection;    
+}
 
-dbConnection = mysql.createConnection({
-  host: HOST,
-  user: USER,
-  password: PASSWORD,
-  database: DB
-})
-
-dbConnection.connect();
-
-export default dbConnection;
+export default getDBConnection;
